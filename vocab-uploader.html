@@ -625,7 +625,8 @@
     if (!line) return null;
     const levelMatch = line.match(/\b(A1|A2|B1|B2)\b/);
     const level = levelMatch ? levelMatch[1] : 'unknown';
-    const posMatch = line.match(/\b(n\.|v\.|adj\.|adv\.|prep\.|conj\.|pron\.|det\.|modal v\.|exclam\.|number|article)\b/);
+    // Match first POS — handles "adj., n." or "prep., adv." etc.
+    const posMatch = line.match(/(n\.|v\.|adj\.|adv\.|prep\.|conj\.|pron\.|det\.|modal v\.|exclam\.|number|article)/);
     const pos = posMatch ? posMatch[0].replace('.', '') : 'n';
     let word = line;
     if (posMatch) word = line.substring(0, line.indexOf(posMatch[0])).trim();
@@ -638,7 +639,7 @@
   // ─── Detect if a line is an Oxford 3000 entry ─────────────
   function isOxfordLine(line) {
     return /\b(A1|A2|B1|B2)\b/.test(line) &&
-           /\b(n\.|v\.|adj\.|adv\.|prep\.|conj\.|pron\.|det\.|modal v\.|exclam\.|number|article)\b/.test(line);
+           /(n\.|v\.|adj\.|adv\.|prep\.|conj\.|pron\.|det\.|modal v\.|exclam\.|number|article)/.test(line);
   }
 
   // ─── Detect if a line is an IELTS topic header ────────────
@@ -704,12 +705,24 @@
 
     if (source === 'oxford') {
       raw.split('\n').forEach(line => {
-        const entry = parseOxfordLine(line);
-        if (entry && !seen.has(entry.word.toLowerCase())) {
-          seen.add(entry.word.toLowerCase());
-          parsedWords.push(entry);
-          oxfordCount++;
-        }
+        line = line.trim();
+        if (!line) return;
+        // Force Oxford parse — extract level if present, otherwise mark unknown
+        const levelMatch = line.match(/\b(A1|A2|B1|B2)\b/);
+        const level = levelMatch ? levelMatch[1] : 'unknown';
+        const posMatch = line.match(/\b(n|v|adj|adv|prep|conj|pron|det|modal v|exclam|number|article)\b/);
+        const pos = posMatch ? posMatch[0] : 'n';
+        // Word is everything before the first POS or level indicator
+        let word = line;
+        const firstMarker = line.search(/\b(n\.|v\.|adj\.|adv\.|prep\.|conj\.|pron\.|det\.|modal|exclam\.|number|article|A1|A2|B1|B2)\b/);
+        if (firstMarker > 0) word = line.substring(0, firstMarker).trim();
+        word = word.replace(/\s*\(.*?\)\s*/g, '').trim();
+        word = word.replace(/[\d,\.]+$/, '').trim();
+        if (!word || word.length < 1) return;
+        if (seen.has(word.toLowerCase())) return;
+        seen.add(word.toLowerCase());
+        parsedWords.push({ word, pos, level, source: 'oxford', topic: 'General' });
+        oxfordCount++;
       });
 
     } else if (source === 'ielts') {
