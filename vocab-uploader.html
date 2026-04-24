@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Kishoreganj — Vocab Word Bank Uploader</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0f0d;
+    --surface: #111a14;
+    --surface2: #182118;
+    --border: #2a3d2e;
+    --accent: #4ade80;
+    --accent2: #86efac;
+    --warn: #fbbf24;
+    --danger: #f87171;
+    --text: #e2f0e6;
+    --muted: #6b8f72;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(74,222,128,0.12);
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2px;
+    border: 1px solid rgba(74,222,128,0.25);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: var(--sans);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.25rem;
+  }
+
+  /* Config section */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  label {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    padding: 0.6rem 0.8rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0f0d;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent2);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(74,222,128,0.06);
+  }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid rgba(248,113,113,0.3);
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    background: rgba(248,113,113,0.08);
+  }
+
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    margin-top: 1.5rem;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-bar-bg {
+    background: var(--surface2);
+    border-radius: 2px;
+    height: 6px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Log terminal */
+  .log-terminal {
+    background: #060a07;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    font-size: 0.72rem;
+    line-height: 1.8;
+    max-height: 320px;
+    overflow-y: auto;
+    font-family: var(--mono);
+  }
+
+  .log-terminal::-webkit-scrollbar { width: 4px; }
+  .log-terminal::-webkit-scrollbar-track { background: transparent; }
+  .log-terminal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .log-line { display: flex; gap: 0.75rem; }
+  .log-time { color: var(--muted); flex-shrink: 0; }
+  .log-ok { color: var(--accent); }
+  .log-warn { color: var(--warn); }
+  .log-err { color: var(--danger); }
+  .log-info { color: #60a5fa; }
+
+  /* Word preview */
+  .preview-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    display: none;
+  }
+
+  .preview-card.show { display: block; }
+
+  .preview-word {
+    font-family: var(--sans);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .preview-meta {
+    color: var(--muted);
+    font-size: 0.68rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .preview-tag {
+    display: inline-block;
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.2);
+    color: var(--accent2);
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.65rem;
+    margin-right: 0.4rem;
+  }
+
+  .preview-label {
+    color: var(--muted);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.6rem;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Status indicator */
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    margin-right: 0.5rem;
+  }
+
+  .status-dot.active {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    animation: pulse 1.5s infinite;
+  }
+
+  .status-dot.done { background: var(--accent); }
+  .status-dot.error { background: var(--danger); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .help-text {
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    line-height: 1.5;
+  }
+
+  .warning-box {
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.25);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    color: var(--warn);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .success-box {
+    background: rgba(74,222,128,0.08);
+    border: 1px solid rgba(74,222,128,0.25);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-top: 1rem;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .success-box.show { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">IELTS Kishoreganj — Admin Tool</div>
+    <h1>Vocab Word Bank <span>Uploader</span></h1>
+    <p class="subtitle">Generates definitions, examples & questions via Claude API → uploads to Firebase automatically</p>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <span class="stat-num" id="stat-total">0</span>
+      <div class="stat-label">Words Queued</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="stat-done">0</span>
+      <div class="stat-label">Uploaded</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="stat-failed">0</span>
+      <div class="stat-label">Failed</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="stat-remaining">0</span>
+      <div class="stat-label">Remaining</div>
+    </div>
+  </div>
+
+  <!-- Step 1: Firebase Config -->
+  <div class="section">
+    <div class="section-title">Step 1 — Firebase Config</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Project ID</label>
+        <input type="text" id="fb-project" value="ielts-kishoreganj" />
+      </div>
+      <div class="field">
+        <label>API Key</label>
+        <input type="text" id="fb-apikey" value="AIzaSyALrZT6C6iPuuG2dLFFSPXR24e2ZeDGECU" />
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>App ID</label>
+        <input type="text" id="fb-appid" value="1:175775850384:web:d195f06cb9255cfe051d15" />
+      </div>
+      <div class="field">
+        <label>Collection Name</label>
+        <input type="text" id="fb-collection" value="wordBank" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Word Input -->
+  <div class="section">
+    <div class="section-title">Step 2 — Paste Word List</div>
+    <div class="warning-box">
+      ⚠️ <strong>Oxford 3000:</strong> Paste the full list — format is auto-detected (e.g. "abandon v. B2")<br>
+      ⚠️ <strong>IELTS 1200:</strong> Paste the full PDF text as-is — topic headers like "Health:" are auto-detected.<br>
+      You can paste both lists together — the tool will figure out which is which.
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Source Mode</label>
+        <select id="word-source">
+          <option value="oxford">Oxford 3000 only</option>
+          <option value="ielts">IELTS 1200 only (auto-detects topics)</option>
+          <option value="both">Both lists together</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Batch Size (words per API call)</label>
+        <select id="batch-size">
+          <option value="5">5 words (safer)</option>
+          <option value="10" selected>10 words (recommended)</option>
+          <option value="15">15 words (faster)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Words — paste everything here</label>
+      <textarea id="word-input" placeholder="Paste Oxford 3000 list, IELTS 1200 list, or both together...&#10;&#10;Oxford format: abandon v. B2&#10;IELTS format: Health: yoga, tai-chi, keep-fit..." style="min-height:160px;"></textarea>
+      <div class="help-text">For IELTS 1200: just copy-paste directly from the PDF. Topic headers (e.g. "Health:", "Nature:") will be detected automatically and each word tagged with the right topic.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="parseWords()">📋 Parse & Preview</button>
+      <button class="btn btn-danger" onclick="clearWords()">✕ Clear</button>
+    </div>
+
+    <!-- Preview of parsed words -->
+    <div id="parse-result" style="margin-top:1rem; font-size:0.75rem; color:var(--muted);"></div>
+  </div>
+
+  <!-- Step 3: Test Single Word -->
+  <div class="section">
+    <div class="section-title">Step 3 — Test Single Word (before full upload)</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Word to test</label>
+        <input type="text" id="test-word" placeholder="e.g. abandon" />
+      </div>
+      <div class="field">
+        <label>Level</label>
+        <select id="test-level">
+          <option value="A1">A1</option>
+          <option value="A2">A2</option>
+          <option value="B1">B1</option>
+          <option value="B2" selected>B2</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-secondary" onclick="testSingleWord()">⚡ Generate & Preview (no upload)</button>
+
+    <div class="preview-card" id="preview-card">
+      <div class="preview-word" id="prev-word"></div>
+      <div class="preview-meta" id="prev-meta"></div>
+      <div class="preview-label">Definition</div>
+      <div id="prev-def"></div>
+      <div class="preview-label">Bangla</div>
+      <div id="prev-bangla"></div>
+      <div class="preview-label">Example Sentence</div>
+      <div id="prev-example"></div>
+      <div class="preview-label">MCQ Question</div>
+      <div id="prev-mcq"></div>
+      <div class="preview-label">Fill in the Blank</div>
+      <div id="prev-fib"></div>
+      <div class="preview-label">Matching Pair</div>
+      <div id="prev-match"></div>
+    </div>
+  </div>
+
+  <!-- Step 4: Upload -->
+  <div class="section">
+    <div class="section-title">Step 4 — Upload to Firebase</div>
+    <div class="warning-box">
+      ⚠️ Make sure you've tested a single word first. Once you start, leave this tab open. Do NOT close the browser. Large lists (500+ words) may take 10–20 minutes.
+    </div>
+
+    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; font-size:0.8rem;">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Ready</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-start" onclick="startUpload()">▶ Start Upload</button>
+      <button class="btn btn-danger" id="btn-stop" onclick="stopUpload()" disabled>■ Stop</button>
+      <button class="btn btn-secondary" onclick="downloadFailedWords()">⬇ Download Failed Words</button>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span id="progress-label">0 / 0 words processed</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="success-box" id="success-box">
+      ✅ Upload complete! All words are now in your Firebase <strong>wordBank</strong> collection. You can now build the Vocab Practice Hub.
+    </div>
+  </div>
+
+  <!-- Log Terminal -->
+  <div class="section">
+    <div class="section-title">Activity Log</div>
+    <div class="log-terminal" id="log"></div>
+  </div>
+
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+  // Make firebase available globally
+  window._fbInit = { initializeApp, getFirestore, doc, setDoc, getDoc };
+</script>
+
+<script>
+  let parsedWords = [];
+  let failedWords = [];
+  let isRunning = false;
+  let shouldStop = false;
+  let db = null;
+  let fbCollection = 'wordBank';
+
+  // ─── Logging ───────────────────────────────────────────────
+  function log(msg, type = 'info') {
+    const el = document.getElementById('log');
+    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = `<span class="log-time">[${time}]</span><span class="log-${type}">${msg}</span>`;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  // ─── Known IELTS topic headers (from the PDF) ──────────────
+  const IELTS_TOPICS = [
+    'Days of the week', 'Months of the year', 'Money matters', 'Subjects',
+    'Studying at college/university', 'Marketing', 'Health', 'Nature',
+    'The environment', 'The animal kingdom', 'Plants', 'Continents',
+    'Countries', 'Languages', 'Architecture and buildings', 'Homes',
+    'In the city', 'Workplaces', 'Rating and qualities', 'Touring',
+    'Verbs', 'Adjectives', 'Hobbies', 'Sports', 'Shapes', 'Measurement',
+    'Transportations', 'Vehicles', 'Weather', 'Places', 'Equipment and tools',
+    'The arts and media', 'Materials', 'Works and jobs', 'Color/Colour',
+    'Expressions and time', 'Other'
+  ];
+
+  // ─── Parse Oxford 3000 line ────────────────────────────────
+  function parseOxfordLine(line) {
+    line = line.trim();
+    if (!line) return null;
+    const levelMatch = line.match(/\b(A1|A2|B1|B2)\b/);
+    const level = levelMatch ? levelMatch[1] : 'unknown';
+    const posMatch = line.match(/\b(n\.|v\.|adj\.|adv\.|prep\.|conj\.|pron\.|det\.|modal v\.|exclam\.|number|article)\b/);
+    const pos = posMatch ? posMatch[0].replace('.', '') : 'n';
+    let word = line;
+    if (posMatch) word = line.substring(0, line.indexOf(posMatch[0])).trim();
+    word = word.replace(/\s*\(.*?\)\s*/g, '').trim();
+    word = word.replace(/\d+$/, '').trim();
+    if (!word || word.length < 1) return null;
+    return { word, pos, level, source: 'oxford', topic: 'General' };
+  }
+
+  // ─── Detect if a line is an Oxford 3000 entry ─────────────
+  function isOxfordLine(line) {
+    return /\b(A1|A2|B1|B2)\b/.test(line) &&
+           /\b(n\.|v\.|adj\.|adv\.|prep\.|conj\.|pron\.|det\.|modal v\.|exclam\.|number|article)\b/.test(line);
+  }
+
+  // ─── Detect if a line is an IELTS topic header ────────────
+  function detectIELTSTopic(line) {
+    const clean = line.trim();
+    // Match patterns like "Health:" or "The environment:"
+    const colonMatch = clean.match(/^([A-Za-z\s\/]+):\s*/);
+    if (!colonMatch) return null;
+    const candidate = colonMatch[1].trim();
+    // Check against known topics (fuzzy — just needs to end with colon)
+    if (candidate.length > 2 && candidate.length < 50) return candidate;
+    return null;
+  }
+
+  // ─── Parse full IELTS 1200 text block ─────────────────────
+  function parseIELTSBlock(text) {
+    const results = [];
+    const seen = new Set();
+    let currentTopic = 'General';
+
+    // Split by lines first
+    const lines = text.split('\n');
+
+    lines.forEach(line => {
+      line = line.trim();
+      if (!line) return;
+
+      // Check if this line starts a new topic
+      const topicDetected = detectIELTSTopic(line);
+      if (topicDetected) {
+        currentTopic = topicDetected;
+        // Also extract words from the same line after the colon
+        const afterColon = line.substring(line.indexOf(':') + 1).trim();
+        if (afterColon) line = afterColon;
+        else return;
+      }
+
+      // Now extract comma-separated words from this line
+      // Remove any trailing topic header artifacts
+      const wordsInLine = line.split(',').map(w => w.trim()).filter(w => w.length > 0);
+
+      wordsInLine.forEach(phrase => {
+        // Clean up
+        phrase = phrase.replace(/[،,\.]+$/, '').trim(); // remove trailing punctuation
+        if (!phrase || phrase.length < 2) return;
+        if (seen.has(phrase.toLowerCase())) return;
+        seen.add(phrase.toLowerCase());
+        results.push({ word: phrase, pos: 'n', level: 'unknown', source: 'ielts', topic: currentTopic });
+      });
+    });
+
+    return results;
+  }
+
+  window.parseWords = function() {
+    const raw = document.getElementById('word-input').value;
+    const source = document.getElementById('word-source').value;
+
+    parsedWords = [];
+    const seen = new Set();
+    let oxfordCount = 0;
+    let ieltsCount = 0;
+
+    if (source === 'oxford') {
+      raw.split('\n').forEach(line => {
+        const entry = parseOxfordLine(line);
+        if (entry && !seen.has(entry.word.toLowerCase())) {
+          seen.add(entry.word.toLowerCase());
+          parsedWords.push(entry);
+          oxfordCount++;
+        }
+      });
+
+    } else if (source === 'ielts') {
+      const entries = parseIELTSBlock(raw);
+      entries.forEach(e => {
+        if (!seen.has(e.word.toLowerCase())) {
+          seen.add(e.word.toLowerCase());
+          parsedWords.push(e);
+          ieltsCount++;
+        }
+      });
+
+    } else {
+      // Both — auto-detect each line
+      // First pass: split into oxford lines and ielts block
+      const lines = raw.split('\n');
+      const ieltsLines = [];
+
+      lines.forEach(line => {
+        if (isOxfordLine(line)) {
+          const entry = parseOxfordLine(line);
+          if (entry && !seen.has(entry.word.toLowerCase())) {
+            seen.add(entry.word.toLowerCase());
+            parsedWords.push(entry);
+            oxfordCount++;
+          }
+        } else {
+          ieltsLines.push(line);
+        }
+      });
+
+      // Second pass: parse IELTS block from non-oxford lines
+      const ieltsEntries = parseIELTSBlock(ieltsLines.join('\n'));
+      ieltsEntries.forEach(e => {
+        if (!seen.has(e.word.toLowerCase())) {
+          seen.add(e.word.toLowerCase());
+          parsedWords.push(e);
+          ieltsCount++;
+        }
+      });
+    }
+
+    // Show topic breakdown for IELTS
+    const topics = {};
+    parsedWords.filter(w => w.source === 'ielts').forEach(w => {
+      topics[w.topic] = (topics[w.topic] || 0) + 1;
+    });
+    const topicSummary = Object.entries(topics).map(([t,c]) => `${t} (${c})`).join(', ');
+
+    updateStats();
+    let resultHtml = `<span style="color:var(--accent)">✓ ${parsedWords.length} unique words/phrases parsed</span>`;
+    if (oxfordCount) resultHtml += ` — <span style="color:var(--accent2)">${oxfordCount} Oxford</span>`;
+    if (ieltsCount) resultHtml += ` — <span style="color:var(--accent2)">${ieltsCount} IELTS</span>`;
+    if (topicSummary) resultHtml += `<br><span style="color:var(--muted); font-size:0.68rem;">Topics detected: ${topicSummary}</span>`;
+    document.getElementById('parse-result').innerHTML = resultHtml;
+
+    log(`Parsed ${parsedWords.length} words (${oxfordCount} Oxford, ${ieltsCount} IELTS)`, 'ok');
+    if (topicSummary) log(`IELTS topics detected: ${Object.keys(topics).join(', ')}`, 'info');
+  };
+
+  window.clearWords = function() {
+    document.getElementById('word-input').value = '';
+    parsedWords = [];
+    updateStats();
+    document.getElementById('parse-result').innerHTML = '';
+    log('Word list cleared', 'warn');
+  };
+
+  // ─── Stats ─────────────────────────────────────────────────
+  function updateStats(done = 0, failed = 0) {
+    const total = parsedWords.length;
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-done').textContent = done;
+    document.getElementById('stat-failed').textContent = failed;
+    document.getElementById('stat-remaining').textContent = Math.max(0, total - done - failed);
+    const pct = total > 0 ? Math.round(((done + failed) / total) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('progress-label').textContent = `${done + failed} / ${total} words processed`;
+  }
+
+  // ─── Claude API call ───────────────────────────────────────
+  async function generateWordData(wordEntries) {
+    const wordList = wordEntries.map(e =>
+      `${e.word} (${e.pos}, ${e.level}, topic: ${e.topic})`
+    ).join('\n');
+
+    const prompt = `You are building a vocabulary database for IELTS students in Bangladesh (Pre-IELTS level, A1-B1).
+
+For each word below, generate a JSON object with these exact fields:
+- word: the word as given
+- partOfSpeech: full form (noun/verb/adjective/adverb/preposition/conjunction/pronoun/determiner/modal verb/exclamation/number/article)
+- level: CEFR level as given (A1/A2/B1/B2/unknown)
+- topic: topic as given
+- source: source as given (oxford/ielts)
+- definition: simple English definition in 1 sentence (max 15 words, A1-level vocabulary, like explaining to a beginner)
+- synonym: 1-2 simple English synonyms separated by comma
+- bangla: Bangla translation (1-3 words, just the translation)
+- exampleSentence: a simple example sentence using the word (max 15 words, everyday context, IELTS-relevant topics like study/work/travel/environment)
+- mcq: object with: question (fill blank with ___), options (array of 4 strings, option A is correct), answer: "A"
+- fillInBlank: object with: sentence (use ___ for blank), answer (the word)
+- matching: object with: clue (a short definition or synonym, max 5 words), answer (the word)
+
+Words to process:
+${wordList}
+
+Return ONLY a valid JSON array. No explanation, no markdown, no backticks. Just the raw JSON array.`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const data = await response.json();
+    const text = data.content[0].text.trim();
+    const clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  }
+
+  // ─── Test single word ──────────────────────────────────────
+  window.testSingleWord = async function() {
+    const word = document.getElementById('test-word').value.trim();
+    const level = document.getElementById('test-level').value;
+    if (!word) { alert('Enter a word first'); return; }
+
+    log(`Testing word: "${word}"...`, 'info');
+    try {
+      const results = await generateWordData([{ word, pos: 'n', level, topic: 'General', source: 'oxford' }]);
+      const r = results[0];
+      document.getElementById('prev-word').textContent = r.word;
+      document.getElementById('prev-meta').innerHTML =
+        `<span class="preview-tag">${r.level}</span><span class="preview-tag">${r.partOfSpeech}</span><span class="preview-tag">${r.topic}</span>`;
+      document.getElementById('prev-def').textContent = `${r.definition} | Synonyms: ${r.synonym}`;
+      document.getElementById('prev-bangla').textContent = r.bangla;
+      document.getElementById('prev-example').textContent = r.exampleSentence;
+      document.getElementById('prev-mcq').textContent =
+        `Q: ${r.mcq.question} | Options: ${r.mcq.options.join(' / ')} | Answer: ${r.mcq.answer}`;
+      document.getElementById('prev-fib').textContent =
+        `${r.fillInBlank.sentence} → Answer: ${r.fillInBlank.answer}`;
+      document.getElementById('prev-match').textContent =
+        `Clue: "${r.matching.clue}" → ${r.matching.answer}`;
+      document.getElementById('preview-card').classList.add('show');
+      log(`✓ Word "${word}" generated successfully`, 'ok');
+    } catch (err) {
+      log(`✗ Error: ${err.message}`, 'err');
+    }
+  };
+
+  // ─── Init Firebase ─────────────────────────────────────────
+  async function initFirebase() {
+    const { initializeApp, getFirestore } = window._fbInit;
+    const config = {
+      apiKey: document.getElementById('fb-apikey').value,
+      authDomain: `${document.getElementById('fb-project').value}.firebaseapp.com`,
+      projectId: document.getElementById('fb-project').value,
+      storageBucket: `${document.getElementById('fb-project').value}.firebasestorage.app`,
+      messagingSenderId: '175775850384',
+      appId: document.getElementById('fb-appid').value
+    };
+    fbCollection = document.getElementById('fb-collection').value;
+    try {
+      const app = initializeApp(config, 'uploader-' + Date.now());
+      db = getFirestore(app);
+      log('Firebase initialized ✓', 'ok');
+      return true;
+    } catch (e) {
+      log(`Firebase init failed: ${e.message}`, 'err');
+      return false;
+    }
+  }
+
+  // ─── Upload word to Firestore ──────────────────────────────
+  async function uploadWord(wordData) {
+    const { doc, setDoc } = window._fbInit;
+    const id = wordData.word.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const ref = doc(db, fbCollection, id);
+    await setDoc(ref, {
+      ...wordData,
+      createdAt: new Date().toISOString(),
+      sessionConfig: { usedInMCQ: true, usedInFIB: true, usedInMatching: true }
+    });
+  }
+
+  // ─── Main upload loop ──────────────────────────────────────
+  window.startUpload = async function() {
+    if (parsedWords.length === 0) {
+      alert('Parse words first (Step 2)');
+      return;
+    }
+
+    const ok = await initFirebase();
+    if (!ok) return;
+
+    isRunning = true;
+    shouldStop = false;
+    failedWords = [];
+    document.getElementById('btn-start').disabled = true;
+    document.getElementById('btn-stop').disabled = false;
+    document.getElementById('status-dot').className = 'status-dot active';
+    document.getElementById('status-text').textContent = 'Uploading...';
+
+    const batchSize = parseInt(document.getElementById('batch-size').value);
+    let done = 0;
+    let failed = 0;
+
+    log(`Starting upload of ${parsedWords.length} words in batches of ${batchSize}`, 'info');
+
+    for (let i = 0; i < parsedWords.length; i += batchSize) {
+      if (shouldStop) {
+        log('Upload stopped by user', 'warn');
+        break;
+      }
+
+      const batch = parsedWords.slice(i, i + batchSize);
+      log(`Processing batch ${Math.floor(i/batchSize)+1}: words ${i+1}–${Math.min(i+batchSize, parsedWords.length)}`, 'info');
+
+      try {
+        const results = await generateWordData(batch);
+
+        for (const wordData of results) {
+          if (shouldStop) break;
+          try {
+            await uploadWord(wordData);
+            done++;
+            log(`✓ "${wordData.word}" uploaded`, 'ok');
+          } catch (e) {
+            failed++;
+            failedWords.push(batch.find(b => b.word === wordData.word) || { word: wordData.word });
+            log(`✗ "${wordData.word}" upload failed: ${e.message}`, 'err');
+          }
+          updateStats(done, failed);
+        }
+
+        // Rate limit: wait 2s between batches
+        if (i + batchSize < parsedWords.length && !shouldStop) {
+          await new Promise(r => setTimeout(r, 2000));
+        }
+
+      } catch (e) {
+        // Entire batch failed — log and continue
+        batch.forEach(w => { failedWords.push(w); failed++; });
+        log(`✗ Batch failed: ${e.message}`, 'err');
+        updateStats(done, failed);
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
+
+    isRunning = false;
+    document.getElementById('btn-start').disabled = false;
+    document.getElementById('btn-stop').disabled = true;
+
+    if (done > 0 && !shouldStop) {
+      document.getElementById('status-dot').className = 'status-dot done';
+      document.getElementById('status-text').textContent = `Done — ${done} uploaded, ${failed} failed`;
+      document.getElementById('success-box').classList.add('show');
+      log(`Upload complete: ${done} succeeded, ${failed} failed`, 'ok');
+    } else {
+      document.getElementById('status-dot').className = 'status-dot error';
+      document.getElementById('status-text').textContent = 'Stopped';
+    }
+  };
+
+  window.stopUpload = function() {
+    shouldStop = true;
+    document.getElementById('btn-stop').disabled = true;
+    log('Stop requested — finishing current batch...', 'warn');
+  };
+
+  window.downloadFailedWords = function() {
+    if (failedWords.length === 0) {
+      alert('No failed words to download');
+      return;
+    }
+    const text = failedWords.map(w => `${w.word} ${w.pos || ''} ${w.level || ''}`.trim()).join('\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'failed-words.txt';
+    a.click();
+    log(`Downloaded ${failedWords.length} failed words`, 'warn');
+  };
+
+  // Init log
+  log('Uploader ready. Follow steps 1→2→3→4.', 'ok');
+</script>
+</body>
+</html>
